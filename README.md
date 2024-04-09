@@ -44,3 +44,5 @@ ngOnInit(): void {
    this.messages.mutate(values => values[0].message = 'Hello Signals!');
 }
 ```
+
+One important point to note here is that the updated object (in this example, an array) is not required to be returned. Furthermore, we are not replacing the entire object, but rather modifying one of its contents. Invoking the mutate function indicates that the object has changed and that any further modifications must be performed.
