@@ -1,27 +1,46 @@
 # AngularSignals
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.3.
+Angular 16 Signals - mutate & update examples
+You can use the mutate method to update a signal. Along the set and update methods mutate is used to update the signal' value with a little difference, let's see how to use each each one of them.
 
-## Development server
+## set()
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Let's start with set to update the signal. The set method is used for updating basic data types such as numbers. For example:
 
-## Code scaffolding
+```
+export default class SignalExample3Component {
+  name = signal('John Michel');
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+  updateName(name: string) {
+    this.name.set(name);
+  }
+}
+```
 
-## Build
+## update()
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+We can use update() to update the signal when the new value of the signal depends on the old value of the signal:
 
-## Running unit tests
+```
+export default class SignalExample4Component {
+  count = signal(0);
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+  increaseCount() {
+    this.count.update(() => this.count() + 1);
+  }
+}
+```
 
-## Running end-to-end tests
+## mutate()
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+The different between update and mutate is that update returns the updated value while mutate modifies the object itself:
 
-## Further help
+#### Note: mutate is not available in the Angular V17
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```
+messages = signal<object[]>([{message: 'Hello World!'}]);
+
+ngOnInit(): void {
+   this.messages.mutate(values => values[0].message = 'Hello Signals!');
+}
+```
