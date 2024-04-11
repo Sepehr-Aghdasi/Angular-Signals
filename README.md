@@ -46,3 +46,42 @@ ngOnInit(): void {
 ```
 
 One important point to note here is that the updated object (in this example, an array) is not required to be returned. Furthermore, we are not replacing the entire object, but rather modifying one of its contents. Invoking the mutate function indicates that the object has changed and that any further modifications must be performed.
+
+## effect()
+
+Effects: An effect is a process that is triggered whenever there is a change in one or more signal values. This functionality is implemented using the effect() function.
+
+```
+// Create a signal for user authentication status
+   isAuthenticated = signal(false);
+
+// Create an effect to perform actions based on authentication status
+   effect(() => {
+   if (this.isAuthenticated()) {
+    console.log('User is authenticated. Redirecting to dashboard…');
+ // Code to redirect to the dashboard can be added here
+   } else {
+     console.log('User is not authenticated. Redirecting to login page…');
+ // Code to redirect to the login page can be added here
+  }
+ });
+
+// Simulate authentication status change
+ this.isAuthenticated.set(true);
+```
+
+## computed()
+
+Computed Signals: These signals get their value from other signals. You set up a computed signal using the computed() function and telling it how to derive its value. When any of the signals it depends on changes, the computed signal updates accordingly.
+
+```
+// Create two signals: price and quantity
+const price = signal(10);
+
+const quantity = signal(5);
+
+// Create a computed signal for total cost based on price and quantity
+const totalCost = computed(() => price() * quantity());
+
+console.log(totalCost()); // Output: 50
+```
