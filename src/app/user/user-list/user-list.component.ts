@@ -1,7 +1,7 @@
 import { NgForOf } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, computed, effect, signal } from '@angular/core';
 import { take } from 'rxjs';
-import { User, UserRole } from '../shared/types/user.type';
+import { User } from '../shared/types/user.type';
 import { UserService } from '../shared/services/user.service';
 import { AddUserComponent } from '../add-user/add-user.component';
 import { UserRolePipe } from '../shared/pipes/user-role.pipe';
@@ -14,14 +14,28 @@ import { UserRolePipe } from '../shared/pipes/user-role.pipe';
   imports: [NgForOf, AddUserComponent, UserRolePipe]
 })
 export class UserListComponent implements OnInit {
-  public userList = signal<User[]>([]);
+  public search = signal<string>("");
+  private searchChangeEffect = effect(() => console.log("Search change", this.search()));
+
+  public filteredUserList = computed(() => {
+    return this.userList().filter(user => {
+      const username: string = `${user.name} ${user.lastName}`;
+      return username.trim().toLocaleLowerCase().includes(this.search().trim().toLocaleLowerCase());
+    });
+  });
+
+  private userList = signal<User[]>([]);
+  private userListChangeEffect = effect(() => console.log("User list change", this.userList()));
+  public userListTotal = computed<number>(() => {
+    return this.filteredUserList().length;
+  });
 
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
-    // setTimeout(() => {
-    this.getUserList();
-    // }, 3000);
+    setTimeout(() => {
+      this.getUserList();
+    }, 1000);
   }
 
   userAdded(newUser: User): void {
@@ -36,5 +50,10 @@ export class UserListComponent implements OnInit {
       .subscribe(res => {
         this.userList.set(res);
       });
+  }
+
+  searchChanges(event: Event): void {
+    const value: string = (event.target as HTMLInputElement).value;
+    this.search.set(value);
   }
 }
