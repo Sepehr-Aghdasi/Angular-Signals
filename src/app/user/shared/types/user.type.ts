@@ -10,6 +10,7 @@ export class User {
     this.name = model.name;
     this.lastName = model.lastName;
     this.age = model.age;
+    this.role = model.role;
   }
 }
 
