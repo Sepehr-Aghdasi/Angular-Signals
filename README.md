@@ -35,7 +35,7 @@ export default class SignalExample4Component {
 
 The different between update and mutate is that update returns the updated value while mutate modifies the object itself:
 
-#### Note: mutate is not available in the Angular V17
+**Note: mutate is not available in the Angular V17**
 
 ```
 messages = signal<object[]>([{message: 'Hello World!'}]);
