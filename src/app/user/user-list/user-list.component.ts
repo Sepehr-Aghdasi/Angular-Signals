@@ -1,10 +1,10 @@
-import { NgForOf } from '@angular/common';
 import { Component, OnInit, computed, effect, signal } from '@angular/core';
+import { NgForOf } from '@angular/common';
 import { take } from 'rxjs';
 import { User } from '../shared/types/user.type';
+import { UserRolePipe } from '../shared/pipes/user-role.pipe';
 import { UserService } from '../shared/services/user.service';
 import { AddUserComponent } from '../add-user/add-user.component';
-import { UserRolePipe } from '../shared/pipes/user-role.pipe';
 
 @Component({
   selector: 'app-user-list',
