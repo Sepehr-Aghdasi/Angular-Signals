@@ -1,8 +1,8 @@
 import { NgForOf } from '@angular/common';
 import { Component, signal, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { UserService } from '../shared/services/user.service';
 import { take } from 'rxjs';
+import { UserService } from '../shared/services/user.service';
 import { RoleModel, User } from '../shared/types/user.type';
 import { AddUserForm } from './add-user.type';
 
@@ -45,13 +45,18 @@ export class AddUserComponent implements OnInit {
 
     const user = new User({
       userId: this.userId,
-      name: this.form.controls.name.value.trim(),
-      lastName: this.form.controls.lastName.value.trim(),
+      name: this.form.controls.name.value.trim().charAt(0).toUpperCase() + this.form.controls.name.value.trim().slice(1),
+      lastName: this.form.controls.lastName.value.trim().charAt(0).toUpperCase() + this.form.controls.lastName.value.trim().slice(1),
       age: this.form.controls.age.value,
       role: this.form.controls.role.value
     });
 
+    this.form.reset();
     this.addUser.emit(user);
+  }
+
+  restForm(): void {
+    this.form.reset();
   }
 
   get isFormValid(): boolean {
