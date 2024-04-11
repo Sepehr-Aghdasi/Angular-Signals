@@ -24,11 +24,13 @@ export class UserListComponent implements OnInit {
     });
   });
 
-  private userList = signal<User[]>([]);
-  private userListChangeEffect = effect(() => console.log("User list change", this.userList()));
+  public userList = signal<User[]>([]);
   public userListTotal = computed<number>(() => {
     return this.filteredUserList().length;
   });
+  private userListChangeEffect = effect(() => console.log("User list change", this.userList()));
+
+  public editUserMode: User | null = null;
 
   constructor(private userService: UserService) { }
 
@@ -40,8 +42,19 @@ export class UserListComponent implements OnInit {
 
   userAdded(newUser: User): void {
     this.userList.update(oldValue => {
+      const userExist: boolean = oldValue.some(user => user.userId === newUser.userId);
+
+      if (userExist) {
+        const userIndex: number = oldValue.findIndex(x => x.userId === newUser.userId);
+
+        oldValue[userIndex] = structuredClone(newUser);
+        return [...oldValue];
+      }
+
       return [...oldValue, newUser];
     });
+
+    this.editUserMode = null;
   }
 
   getUserList(): void {
@@ -50,6 +63,10 @@ export class UserListComponent implements OnInit {
       .subscribe(res => {
         this.userList.set(res);
       });
+  }
+
+  editUserViaId(user: User): void {
+    this.editUserMode = structuredClone(user);
   }
 
   searchChanges(event: Event): void {
