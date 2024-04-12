@@ -1,11 +1,11 @@
 # AngularSignals
 
 Angular 16 Signals - mutate & update examples
-You can use the mutate method to update a signal. Along the set and update methods mutate is used to update the signal' value with a little difference, let's see how to use each each one of them.
+You can use the mutate method to update a signal. Along the set and update methods mutate is used to update the signal value with a little difference, let's see how to use each one of them.
 
 ## set()
 
-Let's start with set to update the signal. The set method is used for updating basic data types such as numbers. For example:
+Let's start with a set to update the signal. The set method is used for updating basic data types such as numbers. For example:
 
 ```
 export default class SignalExample3Component {
@@ -33,9 +33,9 @@ export default class SignalExample4Component {
 
 ## mutate()
 
-The different between update and mutate is that update returns the updated value while mutate modifies the object itself:
+The difference between update and mutate is that update returns the updated value while mutate modifies the object itself:
 
-**Note: mutate is not available in the Angular V17**
+> **Note:** mutate is not available in the Angular V17.
 
 ```
 messages = signal<object[]>([{message: 'Hello World!'}]);
@@ -72,7 +72,7 @@ Effects: An effect is a process that is triggered whenever there is a change in 
 
 ## computed()
 
-Computed Signals: These signals get their value from other signals. You set up a computed signal using the computed() function and telling it how to derive its value. When any of the signals it depends on changes, the computed signal updates accordingly.
+Computed Signals: These signals get their value from other signals. You set up a computed signal using the computed() function and tell it how to derive its value. When any of the signals depends on changes, the computed signal updates accordingly.
 
 ```
 // Create two signals: price and quantity
@@ -85,3 +85,69 @@ const totalCost = computed(() => price() * quantity());
 
 console.log(totalCost()); // Output: 50
 ```
+
+## Signal-based Components:
+
+With the release of Angular 17.3, signal-based components have become a reality. A signal-based component is one in which all input, outputs etc..., are independent of RX.js and use Angular Signals instead.
+
+In other words, here is how we used to write Angular components:
+
+```
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+
+@Component({
+//...
+})
+export class AppComponent {
+
+  @Input()
+  name = 'World';
+
+  @Output()
+  greetingClicked = new EventEmitter<string>();
+
+  @ViewChild(ProfileComponent)
+  profileComponent: ProfileComponent;
+}
+```
+
+Here is what the same component looks like with the signal-based approach:
+
+```
+import { Component, input, output, viewChild } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+
+@Component({
+//...
+})
+export class AppComponent {
+
+  name = input<string>('World');
+
+  greetingClicked = output<string>();
+
+  profileComponent = viewChild(ProfileComponent);
+}
+```
+
+The main difference is that all decorators (@Input, @Output, @ViewChild, @ViewChildren, @ContentChild, @ContentChildren) can now be replaced with functions.
+
+We also have an additional function called **model()**, which is both an input and an output and is perfect for two-way binding.
+
+## Why signal-based components?
+
+In short, for better performance and change detection. When we use signal-based components, **Angular knows** which view (section of component template) depends on which signal. this means updating a signal's value tells Angular **exactly which part of our DOM structure to update**. There is no need to go through the entire component tree and check everything!
+
+> In nutshell less relies on RX.js.
+
+## What about RX.js?
+
+Note that signals are designed to be compatible with RX.js through serval functions:
+
+1. **toObservable()** turns a signal into an Observable.
+2. **toSignal** turns an Observable into the signal.
+3. **outputToObservable** turn and OutputRef(the new object returned by the output() function) into an Observable.
+4. **outputFromObservable()** turns an Observable into an output.
+
+You can keep using RX.js if you want to, especially if your services have complex operator chains. As long as you turn your result into a signal for your component, your're good to go!
