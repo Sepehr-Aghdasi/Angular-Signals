@@ -1,18 +1,17 @@
 <div class="add-user">
-
   <form [formGroup]="form">
     <div class="grid gap-6 mb-6 md:grid-cols-2">
       <div>
         <label class="block mb-2 text-sm font-medium text-gray-900">First name</label>
         <input formControlName="name" type="text"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-          placeholder="John" required />
+          placeholder="John" />
       </div>
       <div>
         <label class="block mb-2 text-sm font-medium text-gray-900">Last name</label>
         <input formControlName="lastName" type="text"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-          placeholder="Doe" required />
+          placeholder="Doe" />
       </div>
     </div>
 
@@ -21,15 +20,15 @@
         <label class="block mb-2 text-sm font-medium text-gray-900">Age</label>
         <input formControlName="age" type="number"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-          placeholder="20" required />
+          placeholder="20" />
       </div>
       <div>
         <label class="block mb-2 text-sm font-medium text-gray-900">
           Select role
         </label>
-        <select formArrayName="role" (change)="selectRole($event)"
+        <select formControlName="role"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-          <option *ngFor="let role of roleList()" [value]="role.roleId" [selected]="role.roleId === selectedRole">
+          <option *ngFor="let role of roleList()" [value]="role.roleId">
             {{ role.name }}
           </option>
         </select>

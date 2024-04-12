@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, effect, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, effect, signal } from '@angular/core';
 import { NgForOf } from '@angular/common';
 import { take } from 'rxjs';
 import { User } from '../shared/types/user.type';
@@ -11,7 +11,8 @@ import { AddUserComponent } from '../add-user/add-user.component';
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss',
   standalone: true,
-  imports: [NgForOf, AddUserComponent, UserRolePipe]
+  imports: [NgForOf, AddUserComponent, UserRolePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserListComponent implements OnInit {
   public search = signal<string>("");

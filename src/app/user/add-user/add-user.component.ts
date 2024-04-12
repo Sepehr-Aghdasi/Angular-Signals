@@ -1,6 +1,7 @@
-import { NgForOf } from '@angular/common';
+import { Component, signal, OnInit, Output, EventEmitter, Input, OnChanges, SimpleChanges, computed, ChangeDetectionStrategy, input, output, effect, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Component, signal, OnInit, Output, EventEmitter, Input, OnChanges, SimpleChanges, computed } from '@angular/core';
+import { NgForOf } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { take } from 'rxjs';
 import { RoleModel, User, UserRole } from '../shared/types/user.type';
 import { UserService } from '../shared/services/user.service';
@@ -12,46 +13,61 @@ import { AddUserForm } from './add-user.type';
   styleUrl: './add-user.component.scss',
   standalone: true,
   imports: [NgForOf, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddUserComponent implements OnInit, OnChanges {
   public form = new FormGroup<AddUserForm>({
     name: new FormControl("", [Validators.required]),
     lastName: new FormControl("", [Validators.required]),
     age: new FormControl(null, [Validators.required]),
-    role: new FormControl(null)
+    role: new FormControl(UserRole.None)
   });
 
   public roleList = signal<RoleModel[]>([]);
 
-  private userList = signal<User[]>([]);
+  // private userList = signal<User[]>([]);
   private lastUserId = computed(() => {
     return this.userList()[this.userList().length - 1].userId;
   });
 
-  public selectedRole: UserRole = UserRole.None;
-  public userModel: User | null = null
+  // Note: Old approach
+  // @Input() user: User; // For editing a user
+  // @Input({ alias: "userList" }) _userList: User[] = [];
+  // @Output() addUser = new EventEmitter<User>();
 
-  @Input() user: User; // For editing a user
-  @Input({ alias: "userList" }) _userList: User[] = [];
-  @Output() addUser = new EventEmitter<User>();
+  // Note: New approach
+  user = input.required<User>();
+  userList = input.required<User[]>();
+  addUser = output<User>();
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {
+    // Note: New approach
+    effect(() => {
+      if (this.user()) {
+        this.initializeForm(this.user());
+      }
+
+      console.log("user changes: ", this.user());
+    });
+  }
 
   ngOnInit(): void {
     this.getRoleList();
   }
 
+  // Note: Old approach
   ngOnChanges(changes: SimpleChanges): void {
-    const { user, _userList } = changes;
+    // const { user, _userList } = changes;
+    // console.log(changes);
 
-    if (user && user.currentValue) {
-      this.userModel = user.currentValue;
-      this.initializeForm(user.currentValue);
-    }
+    // if (user && user.currentValue) {
+    //   this.userModel = user.currentValue;
+    //   this.initializeForm(user.currentValue);
+    // }
 
-    if (_userList) {
-      this.userList.set(_userList.currentValue);
-    }
+    // if (_userList) {
+    //   this.userList.set(_userList.currentValue);
+    // }
   }
 
   getRoleList(): void {
@@ -62,23 +78,18 @@ export class AddUserComponent implements OnInit, OnChanges {
       });
   }
 
-  selectRole(event: Event): void {
-    const value = +(event.target as HTMLSelectElement).value as UserRole;
-    this.selectedRole = value;
-  }
-
   saveUser(): void {
-    const userExist: boolean = this.userList().some(user => user.userId === this.user?.userId);
+    const userExist: boolean = this.userList().some(user => user.userId === this.user()?.userId);
 
     if (userExist) {
-      const userIndex: number = this.userList().findIndex(x => x.userId === this.user.userId);
+      const userIndex: number = this.userList().findIndex(x => x.userId === this.user().userId);
 
       this.userList()[userIndex] = {
         userId: this.userList()[userIndex].userId,
         name: this.form.controls.name.value.trim().charAt(0).toUpperCase() + this.form.controls.name.value.trim().slice(1),
         lastName: this.form.controls.lastName.value.trim().charAt(0).toUpperCase() + this.form.controls.lastName.value.trim().slice(1),
         age: this.form.controls.age.value,
-        role: this.selectedRole
+        role: this.form.controls.role.value
       };
 
       this.addUser.emit(this.userList()[userIndex]);
@@ -93,28 +104,25 @@ export class AddUserComponent implements OnInit, OnChanges {
       name: this.form.controls.name.value.trim().charAt(0).toUpperCase() + this.form.controls.name.value.trim().slice(1),
       lastName: this.form.controls.lastName.value.trim().charAt(0).toUpperCase() + this.form.controls.lastName.value.trim().slice(1),
       age: this.form.controls.age.value,
-      role: this.selectedRole
+      role: this.form.controls.role.value
     });
 
-    this.addUser.emit(structuredClone(user));
+    this.addUser.emit(user);
     this.resetForm();
   }
 
   initializeForm(user: User): void {
-    this.selectedRole = this.roleList().find(x => x.roleId === user.role).roleId;
-
     this.form.controls.name.setValue(user.name);
     this.form.controls.lastName.setValue(user.lastName);
     this.form.controls.age.setValue(user.age);
-    this.form.controls.role.setValue(this.selectedRole);
+    this.form.controls.role.setValue(user.role);
   }
 
   resetForm(): void {
-    this.userModel = null;
-    this.selectedRole = UserRole.None;
     this.form.reset();
   }
 
+  // TODO: bug not detecting the changes in the template
   get isFormValid(): boolean {
     return this.form.valid;
   }

@@ -7,10 +7,10 @@ import { UserRole, User, RoleModel } from '../types/user.type';
 })
 export class UserService {
   private userList: User[] = [
-    { userId: 1, name: "Sepehr", lastName: "Aghdasi", age: 23, role: UserRole.CEO },
-    { userId: 2, name: "Saeed", lastName: "Saboui", age: 23, role: UserRole.FrontEndDeveloper },
+    { userId: 1, name: "Sepehr", lastName: "Aghdasi", age: 20, role: UserRole.CEO },
+    { userId: 2, name: "Saeed", lastName: "Sabouri", age: 23, role: UserRole.FrontEndDeveloper },
     { userId: 3, name: "Parsa", lastName: "Moghbeli", age: 20, role: UserRole.BackEndDeveloper },
-    { userId: 4, name: "Aref", lastName: "Kadkhodaei", age: 20, role: UserRole.Designer }
+    { userId: 4, name: "Aref", lastName: "Kadkhodaei", age: 21, role: UserRole.Designer }
   ];
 
   private roleList: RoleModel[] = [
