@@ -150,4 +150,9 @@ Note that signals are designed to be compatible with RX.js through serval functi
 3. **outputToObservable** turn and OutputRef(the new object returned by the output() function) into an Observable.
 4. **outputFromObservable()** turns an Observable into an output.
 
-You can keep using RX.js if you want to, especially if your services have complex operator chains. As long as you turn your result into a signal for your component, your're good to go!
+You can keep using RX.js if you want to, especially if your services have complex operator chains. As long as you turn your result into a signal for your component, you're good to go!
+
+## Articles to read
+
+1. [Future of change detection with signals](https://medium.com/ngconf/future-of-change-detection-in-angular-with-signals-fb367b66a232)
+2. [Angular signals best practices](https://blog.angulartraining.com/angular-signals-best-practices-around-exposing-signals-5385452150a1)
