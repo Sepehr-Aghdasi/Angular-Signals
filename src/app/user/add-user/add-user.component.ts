@@ -1,7 +1,6 @@
-import { Component, signal, OnInit, Output, EventEmitter, Input, OnChanges, SimpleChanges, computed, ChangeDetectionStrategy, input, output, effect, ChangeDetectorRef } from '@angular/core';
+import { Component, signal, OnInit, Output, EventEmitter, Input, OnChanges, SimpleChanges, computed, input, output, effect } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgForOf } from '@angular/common';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { take } from 'rxjs';
 import { RoleModel, User, UserRole } from '../shared/types/user.type';
 import { UserService } from '../shared/services/user.service';
@@ -12,8 +11,7 @@ import { AddUserForm } from './add-user.type';
   templateUrl: './add-user.component.html',
   styleUrl: './add-user.component.scss',
   standalone: true,
-  imports: [NgForOf, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  imports: [NgForOf, ReactiveFormsModule]
 })
 export class AddUserComponent implements OnInit, OnChanges {
   public form = new FormGroup<AddUserForm>({
@@ -120,9 +118,9 @@ export class AddUserComponent implements OnInit, OnChanges {
 
   resetForm(): void {
     this.form.reset();
+    this.form.controls.role.setValue(UserRole.None);
   }
 
-  // TODO: bug not detecting the changes in the template
   get isFormValid(): boolean {
     return this.form.valid;
   }
