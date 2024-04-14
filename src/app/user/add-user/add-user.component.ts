@@ -87,7 +87,7 @@ export class AddUserComponent implements OnInit, OnChanges {
         name: this.form.controls.name.value.trim().charAt(0).toUpperCase() + this.form.controls.name.value.trim().slice(1),
         lastName: this.form.controls.lastName.value.trim().charAt(0).toUpperCase() + this.form.controls.lastName.value.trim().slice(1),
         age: this.form.controls.age.value,
-        role: this.form.controls.role.value
+        role: Number(this.form.controls.role.value)
       };
 
       this.addUser.emit(this.userList()[userIndex]);
@@ -102,7 +102,7 @@ export class AddUserComponent implements OnInit, OnChanges {
       name: this.form.controls.name.value.trim().charAt(0).toUpperCase() + this.form.controls.name.value.trim().slice(1),
       lastName: this.form.controls.lastName.value.trim().charAt(0).toUpperCase() + this.form.controls.lastName.value.trim().slice(1),
       age: this.form.controls.age.value,
-      role: this.form.controls.role.value
+      role: Number(this.form.controls.role.value)
     });
 
     this.addUser.emit(user);
