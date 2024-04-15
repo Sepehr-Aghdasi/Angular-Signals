@@ -86,6 +86,67 @@ const totalCost = computed(() => price() * quantity());
 console.log(totalCost()); // Output: 50
 ```
 
+## model()
+Before Angular V17, we used the [(ngModel)] directive for two-way binding. It offered a convenient way to connect input elements to the properties. However [(ngModel)] had limitations such as Performance Overhead: Extensive use of [(ngModel)] could impact performance due to change detection overhead.
+
+**New Approach with Model Signals:** Angular V17 introduces model signals, providing a more flexible approach to two-way binding.
+
+> Old Approach
+```
+// child.component.ts
+@Component({
+  selector: 'app-child',
+  ...
+})
+export class ChildComponent {
+  @Input() counter: number = 0;
+
+  @Output() counterChange = new EventEmitter<number>();
+
+  changeValue(newValue: number): void {
+    this.counterChange.emit(newValue)
+  }
+}
+
+// parent.component.ts
+@Component({
+  selector: 'app-parent',
+  template: `
+    <app-child [(counter)]="currentCount" />
+  `
+})
+export class ParentComponent {
+  currentCount = 0;
+}
+```
+
+> New Approach
+```
+// child.component.ts
+@Component({
+  selector: 'app-child',
+  ...
+})
+export class ChildComponent {
+  counter= model(0); 
+
+  changeValue(newValue: number) {
+    this.counter.set(newValue) 
+  }
+}
+
+// parent.component.ts
+@Component({
+  selector: 'app-parent',
+  template: `      
+    <app-child [(counter)]="currentCount" />
+  `,
+})
+export class ParentComponent {
+  currentCount = 0;
+}
+```
+
 ## Signal-based Components:
 
 With the release of Angular 17.3, signal-based components have become a reality. A signal-based component is one in which all input, outputs etc..., are independent of RX.js and use Angular Signals instead.
