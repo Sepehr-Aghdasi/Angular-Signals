@@ -30,7 +30,7 @@ export class UserListComponent implements OnInit {
   });
   private userListChangeEffect = effect(() => console.log("User list change", this.userList()));
 
-  public editUserMode: User | null = null;
+  public editUserModel: User | null = null;
 
   constructor(private userService: UserService) { }
 
@@ -54,7 +54,7 @@ export class UserListComponent implements OnInit {
       return [...oldValue, newUser];
     });
 
-    this.editUserMode = null;
+    this.editUserModel = null;
   }
 
   getUserList(): void {
@@ -66,7 +66,7 @@ export class UserListComponent implements OnInit {
   }
 
   editUserViaId(user: User): void {
-    this.editUserMode = structuredClone(user);
+    this.editUserModel = structuredClone(user);
   }
 
   searchChanges(event: Event): void {
