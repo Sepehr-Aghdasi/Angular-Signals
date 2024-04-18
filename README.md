@@ -11,7 +11,7 @@ Signals have an easy-to-understand API for reporting data changes to the framewo
 Let's start with a set to update the signal. The set method is used for updating basic data types such as numbers. For example:
 
 ```
-export default class SignalExampleComponent {
+export class SignalExampleComponent {
   name = signal('John Michel');
 
   updateName(name: string) {
@@ -25,7 +25,7 @@ export default class SignalExampleComponent {
 We can use update() to update the signal when the new value of the signal depends on the old value of the signal:
 
 ```
-export default class SignalExampleComponent {
+export class SignalExampleComponent {
   count = signal(0);
 
   increaseCount() {
