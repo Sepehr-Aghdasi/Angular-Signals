@@ -1,7 +1,10 @@
 # AngularSignals
 
-Angular 16 Signals - mutate & update examples
-You can use the mutate method to update a signal. Along the set and update methods mutate is used to update the signal value with a little difference, let's see how to use each one of them.
+So how Angular is working?? Angular uses life-cycle hooks to detect changes in your Angular app and after that, if something is changing Angular doesn’t know what changes, maybe some event happened or some variable changed in some component so to detect changes Angular has to check all components from the top to bottom to find out an event happened or some variable is changed to update UI and as you can understand this is a magical process because you don’t have to do anything you just change some value and then Angular re-renders the whole application but when you have a lot of components and lots of things to check Angular becomes slow this is where you are getting things like on push change-detection which is not fixed but hack.
+
+This is why we have something new which is called Angular-Signals.
+
+Signals have an easy-to-understand API for reporting data changes to the framework, allowing the framework to optimize change detection and re-rendering in a way that so far was just not possible.
 
 ## set()
 
@@ -87,7 +90,7 @@ console.log(totalCost()); // Output: 50
 ```
 
 ## model()
-Before Angular V17, we used the [(ngModel)] directive for two-way binding. It offered a convenient way to connect input elements to the properties. However [(ngModel)] had limitations such as Performance Overhead: Extensive use of [(ngModel)] could impact performance due to change detection overhead.
+Before Angular V17, we used the [(ngModel)] directive for two-way binding. It offered a convenient way to connect input elements to the properties. However [(ngModel)] had limitations such as Performance Overhead: Extensive use of [(ngModel)] could impact performance due to change-detection overhead.
 
 **New Approach with Model Signals:** Angular V17 introduces model signals, providing a more flexible approach to two-way binding.
 
@@ -215,5 +218,5 @@ You can keep using RX.js if you want to, especially if your services have comple
 
 ## Articles to read
 
-1. [Future of change detection with signals](https://medium.com/ngconf/future-of-change-detection-in-angular-with-signals-fb367b66a232)
+1. [Future of change-detection with signals](https://medium.com/ngconf/future-of-change-detection-in-angular-with-signals-fb367b66a232)
 2. [Angular signals best practices](https://blog.angulartraining.com/angular-signals-best-practices-around-exposing-signals-5385452150a1)
